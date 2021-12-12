@@ -7,6 +7,7 @@ import http from 'http';
 import Dishes from './src/data-sources/Dishes.js';
 import Ingredients from './src/data-sources/Ingredients.js';
 import Shares from './src/data-sources/Shares.js';
+import Photos from './src/data-sources/Photos.js';
 
 const typeDefs = gql`
     type Dish {
@@ -125,9 +126,11 @@ const typeDefs = gql`
 
     scalar Upload
     type File {
-        filename: String!
-        mimetype: String!
-        encoding: String!
+        success: Boolean!
+        message: String
+        filename: String
+        mimetype: String
+        encoding: String
     }
 
     type Query {
@@ -154,12 +157,8 @@ const resolvers = {
     Mutation: {
         shareWeeklyMenu: async (_, { menu }, { dataSources: { share: ds } }) =>
             await ds.addNewShare(menu),
-        uploadDishPhoto: async (_, { file }) => {
-            const { createReadStream, filename, mimetype, encoding } = await file;
-            const stream = createReadStream();
-            console.log(stream);
-            return { filename, mimetype, encoding };
-        },
+        uploadDishPhoto: async (_, { file }, { dataSources: { photos: ds } }) =>
+            await ds.uploadDishPhoto(file),
         addNewDishes: async (_, { dishes }, { dataSources: { dishes: ds } }) =>
             await ds.addNewDishes(dishes),
         updateDishes: async (_, { dishes }, { dataSources: { dishes: ds } }) =>
@@ -186,12 +185,14 @@ async function startApolloServer(typeDefs, resolvers) {
         plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
         dataSources: () => ({
             share: new Shares(db.collection('shares')),
+            photos: new Photos(db.collection('photos'), process.env.PHOTOS_PATH),
             dishes: new Dishes(db.collection('dishes')),
             ingredients: new Ingredients(db.collection('ingredients')),
         })
     });
     await server.start();
     app.use(graphqlUploadExpress());
+    app.use('/photos', express.static(process.env.PHOTOS_PATH));
     server.applyMiddleware({ app });
     await new Promise(resolve => httpServer.listen({ port: 8080 }, resolve));
     console.log(`🚀  Server ready at http://localhost:8080${server.graphqlPath}`);

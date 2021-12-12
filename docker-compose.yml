@@ -8,9 +8,15 @@ services:
       DB_USERNAME: root
       DB_PASSWORD: example
       DB_URL: mongo:27017
+      PHOTOS_PATH: '/var/lib/photos'
+    volumes:
+      - 'photos:/var/lib/photos'
   mongo:
     image: mongo:5
     restart: always
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: example
+
+volumes:
+  photos: null
