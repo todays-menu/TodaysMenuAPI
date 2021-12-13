@@ -1,6 +1,6 @@
 import { ApolloServer } from 'apollo-server-express';
 import { ApolloServerPluginDrainHttpServer } from 'apollo-server-core';
-import { GraphQLUpload, graphqlUploadExpress } from 'graphql-upload';
+import { graphqlUploadExpress } from 'graphql-upload';
 import { MongoClient } from 'mongodb';
 import express from 'express';
 import http from 'http';
@@ -8,29 +8,7 @@ import Dishes from './src/data-sources/dishes.js';
 import Ingredients from './src/data-sources/ingredients.js';
 import Shares from './src/data-sources/shares.js';
 import typeDefs from './src/schema.graphql';
-
-
-const resolvers = {
-    Upload: GraphQLUpload,
-    Query: {
-        dishes: async (_, __, { dataSources: { dishes } }) => await dishes.getDishes(),
-        ingredients: async (_, __, { dataSources: { ingredients } }) => await ingredients.getIngredients(),
-    },
-    Mutation: {
-        shareMenu: async (_, { menu }, { dataSources: { share: ds } }) =>
-            await ds.addNewShare(menu),
-        addNewDishes: async (_, { dishes }, { dataSources: { dishes: ds } }) =>
-            await ds.addNewDishes(dishes),
-        updateDishes: async (_, { dishes }, { dataSources: { dishes: ds } }) =>
-            await ds.updateDishes(dishes),
-        addNewIngredients: async (_, { ingredients }, { dataSources: { ingredients: ds } }) =>
-            await ds.addNewIngredients(ingredients),
-    },
-    RecipeIngredient: {
-        ingredient: async (parent, _, { dataSources: { ingredients } }) =>
-            await ingredients.findOneByName(parent.description),
-    }
-};
+import { resolvers } from './src/resolvers.js';
 
 async function startApolloServer(typeDefs, resolvers) {
     const app = express();
