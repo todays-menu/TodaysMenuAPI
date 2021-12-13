@@ -15,7 +15,11 @@ export default class Ingredients extends DataSource {
     }
 
     async findOneByName(name) {
-        return await this.collection.findOne({ name: { $eq: name } });
+        let ingredient = await this.collection.findOne({ name: { $eq: name } });
+        if (ingredient == null) {
+            return { name, category: 'unknown' };
+        }
+        return ingredient;
     }
 
     async addNewIngredients(ingredients) {
