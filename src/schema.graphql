@@ -1,0 +1,93 @@
+type Dish {
+    id: ID!
+    name: String!
+    meal: Meal!
+    ingredients: [RecipeIngredient]!
+    spicy: Float
+    cook_time: Int
+    recipe_link: String
+    serving: Int
+    one_dish: Boolean
+    soup: Boolean
+    style: String
+    photo: Photo
+    suppressed: Boolean
+}
+
+type Photo {
+    filename: String
+    mimetype: String
+    encoding: String
+}
+
+enum Meal {
+    lunch
+    dinner
+}
+
+type RecipeIngredient {
+    ingredient: Ingredient!
+    quantity: String!
+}
+
+type Ingredient {
+    id: ID!
+    name: String!
+    category: String!
+}
+
+input ShareableMenuInput {
+    "Opaque base64 encoded payload"
+    payload: String!
+}
+
+type ShareableMenu {
+    success: Boolean!
+    message: String
+    "Short shareable key"
+    key: String
+}
+
+scalar Upload
+
+input DishInput {
+    name: String!
+    meal: Meal
+    ingredients: [RecipeIngredientInput]
+    spicy: Float
+    cook_time: Int
+    recipe_link: String
+    serving: Int
+    one_dish: Boolean
+    soup: Boolean
+    style: String
+    photo: Upload
+    suppressed: Boolean
+}
+
+input RecipeIngredientInput {
+    name: String!
+    quantity: String!
+}
+
+input IngredientInput {
+    name: String!
+    category: String!
+}
+
+type MutationResult {
+    success: Boolean!
+    message: String
+}
+
+type Query {
+    dishes: [Dish]
+    ingredients: [Ingredient]
+}
+
+type Mutation {
+    shareMenu(menu: ShareableMenuInput): ShareableMenu
+    addNewDishes(dishes: [DishInput]): MutationResult
+    updateDishes(dishes: [DishInput]): MutationResult
+    addNewIngredients(ingredients: [IngredientInput]): MutationResult
+}

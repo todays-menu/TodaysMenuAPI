@@ -1,0 +1,37 @@
+{
+  "name": "todays-menu-api",
+  "version": "1.0.0",
+  "description": "TodaysMenu backend API",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "build": "rollup -c",
+    "start": "node dist/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/evelynhung/TodaysMenuAPI.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/evelynhung/TodaysMenuAPI/issues"
+  },
+  "homepage": "https://github.com/evelynhung/TodaysMenuAPI#readme",
+  "dependencies": {
+    "apollo-datasource": "^3.3.0",
+    "apollo-server-core": "^3.5.0",
+    "apollo-server-express": "^3.5.0",
+    "express": "^4.17.1",
+    "graphql": "^15.8.0",
+    "graphql-upload": "^13.0.0",
+    "mongodb": "^4.2.1"
+  },
+  "devDependencies": {
+    "@rollup/plugin-graphql": "^1.1.0",
+    "@rollup/plugin-node-resolve": "^13.0.6",
+    "rollup": "^2.61.1"
+  }
+}
