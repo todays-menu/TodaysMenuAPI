@@ -7,7 +7,6 @@ import http from 'http';
 import Dishes from './src/data-sources/dishes.js';
 import Ingredients from './src/data-sources/ingredients.js';
 import Shares from './src/data-sources/shares.js';
-import Photos from './src/data-sources/photos.js';
 import typeDefs from './src/schema.graphql';
 
 
@@ -20,16 +19,12 @@ const resolvers = {
     Mutation: {
         shareMenu: async (_, { menu }, { dataSources: { share: ds } }) =>
             await ds.addNewShare(menu),
-        // uploadDishPhoto: async (_, { file }, { dataSources: { photos: ds } }) =>
-        //     await ds.uploadDishPhoto(file),
         addNewDishes: async (_, { dishes }, { dataSources: { dishes: ds } }) =>
             await ds.addNewDishes(dishes),
         updateDishes: async (_, { dishes }, { dataSources: { dishes: ds } }) =>
             await ds.updateDishes(dishes),
         addNewIngredients: async (_, { ingredients }, { dataSources: { ingredients: ds } }) =>
             await ds.addNewIngredients(ingredients),
-        // updateIngredients: async (_, { ingredients }, { dataSources: { ingredients: ds } }) =>
-        //     await ds.updateIngredients(ingredients),
     },
 };
 
@@ -48,8 +43,7 @@ async function startApolloServer(typeDefs, resolvers) {
         plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
         dataSources: () => ({
             share: new Shares(db.collection('shares')),
-            photos: new Photos(db.collection('photos'), process.env.PHOTOS_PATH),
-            dishes: new Dishes(db.collection('dishes')),
+            dishes: new Dishes(db.collection('dishes'), process.env.PHOTOS_PATH),
             ingredients: new Ingredients(db.collection('ingredients')),
         })
     });
