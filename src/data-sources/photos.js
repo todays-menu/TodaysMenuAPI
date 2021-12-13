@@ -1,11 +1,10 @@
 import { DataSource } from "apollo-datasource";
-import { Collection } from "mongodb";
 import { randomBytes } from "crypto";
 import { createWriteStream } from "fs";
 
 export default class Shares extends DataSource {
     /**
-     * @param {Collection} collection MongoDB collection
+     * @param {Collectimport('mongodb').Collectionion} collection MongoDB collection
      */
     constructor(collection, base_path) {
         super();

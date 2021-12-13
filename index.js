@@ -1,152 +1,15 @@
-import { ApolloServer, gql } from 'apollo-server-express';
+import { ApolloServer } from 'apollo-server-express';
 import { ApolloServerPluginDrainHttpServer } from 'apollo-server-core';
 import { GraphQLUpload, graphqlUploadExpress } from 'graphql-upload';
 import { MongoClient } from 'mongodb';
 import express from 'express';
 import http from 'http';
-import Dishes from './src/data-sources/Dishes.js';
-import Ingredients from './src/data-sources/Ingredients.js';
-import Shares from './src/data-sources/Shares.js';
-import Photos from './src/data-sources/Photos.js';
+import Dishes from './src/data-sources/dishes.js';
+import Ingredients from './src/data-sources/ingredients.js';
+import Shares from './src/data-sources/shares.js';
+import Photos from './src/data-sources/photos.js';
+import typeDefs from './src/schema.graphql';
 
-const typeDefs = gql`
-    type Dish {
-        id: ID!
-        name: String!
-        meal: Meal!
-        ingredient: [RecipeIngredient]!
-        meat: Float
-        vegetable: Float
-        seafood: Float
-        spice: Boolean
-        cook_time: Int
-        iCook: String
-        amount: Int
-        solo(is: Boolean): Boolean
-        soup: Boolean
-        style: String
-    }
-
-    enum Meal {
-        lunch
-        dinner
-    }
-
-    type RecipeIngredient {
-        description: String!
-        quantity: String!
-    }
-
-    type Ingredient {
-        id: ID!
-        name: String!
-        category: String!
-    }
-
-    input ShareDishInput {
-        photo: String
-        name: String!
-        cook_time: Int!
-    }
-
-    input ShareDayMenuInput {
-        date: String!
-        lunch: [ShareDishInput!]
-        dinner: [ShareDishInput!]
-    }
-
-    input ShareableWeeklyMenuInput {
-        menus: [ShareDayMenuInput!]!
-    }
-
-    type ShareableWeeklyMenu {
-        success: Boolean!
-        message: String
-        key: String
-    }
-
-    input NewDishInput {
-        name: String!
-        meal: Meal!
-        ingredient: [NewDishRecipeIngredientInput]!
-        meat: Float
-        vegetable: Float
-        seafood: Float
-        spice: Boolean
-        cook_time: Int
-        iCook: String
-        amount: Int
-        solo: Boolean
-        soup: Boolean
-        style: String
-    }
-
-    input UpdateDishInput {
-        id: ID!
-        name: String!
-        meal: Meal!
-        ingredient: [UpdateDishRecipeIngredientInput]!
-        meat: Float
-        vegetable: Float
-        seafood: Float
-        spice: Boolean
-        cook_time: Int
-        iCook: String
-        amount: Int
-        solo: Boolean
-        soup: Boolean
-        style: String
-    }
-
-    input NewDishRecipeIngredientInput {
-        description: String!
-        quantity: String!
-    }
-
-    input UpdateDishRecipeIngredientInput {
-        description: String!
-        quantity: String!
-    }
-
-    input NewIngredientInput {
-        name: String!
-        category: String!
-    }
-
-    input UpdateIngredientInput {
-        id: ID!
-        name: String!
-        category: String!
-    }
-
-    type MutationResult {
-        success: Boolean!
-        message: String
-    }
-
-    scalar Upload
-    type File {
-        success: Boolean!
-        message: String
-        filename: String
-        mimetype: String
-        encoding: String
-    }
-
-    type Query {
-        dishes: [Dish]
-        ingredients: [Ingredient]
-    }
-
-    type Mutation {
-        shareWeeklyMenu(menu: ShareableWeeklyMenuInput): ShareableWeeklyMenu
-        uploadDishPhoto(file: Upload!): File!
-        addNewDishes(dishes: [NewDishInput]): MutationResult
-        updateDishes(dishes: [UpdateDishInput]): MutationResult
-        addNewIngredients(ingredients: [NewIngredientInput]): MutationResult
-        updateIngredients(ingredients: [UpdateIngredientInput]): MutationResult
-    }
-`;
 
 const resolvers = {
     Upload: GraphQLUpload,
@@ -157,16 +20,16 @@ const resolvers = {
     Mutation: {
         shareWeeklyMenu: async (_, { menu }, { dataSources: { share: ds } }) =>
             await ds.addNewShare(menu),
-        uploadDishPhoto: async (_, { file }, { dataSources: { photos: ds } }) =>
-            await ds.uploadDishPhoto(file),
+        // uploadDishPhoto: async (_, { file }, { dataSources: { photos: ds } }) =>
+        //     await ds.uploadDishPhoto(file),
         addNewDishes: async (_, { dishes }, { dataSources: { dishes: ds } }) =>
             await ds.addNewDishes(dishes),
         updateDishes: async (_, { dishes }, { dataSources: { dishes: ds } }) =>
             await ds.updateDishes(dishes),
         addNewIngredients: async (_, { ingredients }, { dataSources: { ingredients: ds } }) =>
             await ds.addNewIngredients(ingredients),
-        updateIngredients: async (_, { ingredients }, { dataSources: { ingredients: ds } }) =>
-            await ds.updateIngredients(ingredients),
+        // updateIngredients: async (_, { ingredients }, { dataSources: { ingredients: ds } }) =>
+        //     await ds.updateIngredients(ingredients),
     },
 };
 

@@ -1,0 +1,123 @@
+type Dish {
+    id: ID!
+    name: String!
+    meal: Meal!
+    ingredient: [RecipeIngredient]!
+    spicy: Float
+    cook_time: Int
+    recipe_link: String
+    serving: Int
+    one_dish: Boolean
+    soup: Boolean
+    style: String
+}
+
+enum Meal {
+    lunch
+    dinner
+}
+
+type RecipeIngredient {
+    ingredient: Ingredient!
+    quantity: String!
+}
+
+type Ingredient {
+    id: ID!
+    name: String!
+    category: String!
+}
+
+input ShareDishInput {
+    photo: String
+    name: String!
+    cook_time: Int!
+}
+
+input ShareDayMenuInput {
+    date: String!
+    lunch: [ShareDishInput!]
+    dinner: [ShareDishInput!]
+}
+
+input ShareableWeeklyMenuInput {
+    menus: [ShareDayMenuInput!]!
+}
+
+type ShareableWeeklyMenu {
+    success: Boolean!
+    message: String
+    key: String
+}
+
+input NewDishInput {
+    name: String!
+    meal: Meal!
+    ingredient: [DishRecipeIngredientINput]!
+    spicy: Float
+    cook_time: Int
+    recipe_link: String
+    amount: Int
+    one_dish: Boolean
+    soup: Boolean
+    style: String
+    photo: Upload
+}
+
+input UpdateDishInput {
+    id: ID!
+    name: String!
+    meal: Meal!
+    ingredient: [DishRecipeIngredientINput]!
+    spicy: Float
+    cook_time: Int
+    recipe_link: String
+    amount: Int
+    one_dish: Boolean
+    soup: Boolean
+    style: String
+    photo: Upload
+}
+
+input DishRecipeIngredientINput {
+    "Name of the ingredient"
+    ingredient: String!
+    quantity: String!
+}
+
+input NewIngredientInput {
+    name: String!
+    category: String!
+}
+
+input UpdateIngredientInput {
+    id: ID!
+    name: String!
+    category: String!
+}
+
+type MutationResult {
+    success: Boolean!
+    message: String
+}
+
+scalar Upload
+type File {
+    success: Boolean!
+    message: String
+    filename: String
+    mimetype: String
+    encoding: String
+}
+
+type Query {
+    dishes: [Dish]
+    ingredients: [Ingredient]
+}
+
+type Mutation {
+    shareWeeklyMenu(menu: ShareableWeeklyMenuInput): ShareableWeeklyMenu
+    addNewDishes(dishes: [NewDishInput]): MutationResult
+    updateDishes(dishes: [UpdateDishInput]): MutationResult
+    addNewIngredients(ingredients: [NewIngredientInput]): MutationResult
+}

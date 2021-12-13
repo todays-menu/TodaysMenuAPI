@@ -1,9 +1,9 @@
 import { DataSource } from "apollo-datasource";
-import { Collection, ObjectId } from "mongodb";
+import { ObjectId } from "mongodb";
 
 export default class Dishes extends DataSource {
     /**
-     * @param {Collection} collection MongoDB collection
+     * @param {import('mongodb').Collection} collection MongoDB collection
      */
     constructor(collection) {
         super();
