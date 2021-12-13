@@ -36,7 +36,7 @@ async function startApolloServer(typeDefs, resolvers) {
     const clusterUrl = process.env.DB_URL;
     const client = new MongoClient(`mongodb://${dbusername}:${dbpassword}@${clusterUrl}/`);
     await client.connect();
-    const db = client.db("test");
+    const db = client.db(process.env.DB_NAME);
     const server = new ApolloServer({
         typeDefs,
         resolvers,
