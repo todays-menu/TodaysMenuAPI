@@ -44,7 +44,7 @@ export default class Dishes extends DataSource {
         dishes.forEach(dish => {
             dish = Object.assign({ _id: new ObjectId(dish.id) }, dish);
             delete dish.id;
-            bulkOp.find({ _id: { $eq: dish._id } }).replaceOne(dish);
+            bulkOp.find({ _id: { $eq: dish._id } }).updateOne({ $set: dish });
         });
         let result = await bulkOp.execute();
         return { success: true, message: `modified ${result.nModified} dishes` };
