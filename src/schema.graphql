@@ -56,7 +56,7 @@ input DishInput {
     spicy: Float
     cook_time: Int
     recipe_link: String
-    amount: Int
+    serving: Int
     one_dish: Boolean
     soup: Boolean
     style: String
