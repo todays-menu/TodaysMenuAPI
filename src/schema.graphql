@@ -28,25 +28,15 @@ type Ingredient {
     category: String!
 }
 
-input ShareDishInput {
-    photo: String
-    name: String!
-    cook_time: Int!
+input ShareableMenuInput {
+    "Opaque base64 encoded payload"
+    payload: String!
 }
 
-input ShareDayMenuInput {
-    date: String!
-    lunch: [ShareDishInput!]
-    dinner: [ShareDishInput!]
-}
-
-input ShareableWeeklyMenuInput {
-    menus: [ShareDayMenuInput!]!
-}
-
-type ShareableWeeklyMenu {
+type ShareableMenu {
     success: Boolean!
     message: String
+    "Short shareable key"
     key: String
 }
 
@@ -116,7 +106,7 @@ type Query {
 }
 
 type Mutation {
-    shareWeeklyMenu(menu: ShareableWeeklyMenuInput): ShareableWeeklyMenu
+    shareMenu(menu: ShareableMenuInput): ShareableMenu
     addNewDishes(dishes: [NewDishInput]): MutationResult
     updateDishes(dishes: [UpdateDishInput]): MutationResult
     addNewIngredients(ingredients: [NewIngredientInput]): MutationResult

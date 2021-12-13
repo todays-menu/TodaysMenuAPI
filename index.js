@@ -18,7 +18,7 @@ const resolvers = {
         ingredients: async (_, __, { dataSources: { ingredients } }) => await ingredients.getIngredients(),
     },
     Mutation: {
-        shareWeeklyMenu: async (_, { menu }, { dataSources: { share: ds } }) =>
+        shareMenu: async (_, { menu }, { dataSources: { share: ds } }) =>
             await ds.addNewShare(menu),
         // uploadDishPhoto: async (_, { file }, { dataSources: { photos: ds } }) =>
         //     await ds.uploadDishPhoto(file),

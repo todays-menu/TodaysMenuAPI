@@ -10,9 +10,9 @@ export default class Shares extends DataSource {
         this.collection = collection;
     }
 
-    async addNewShare(shareableWeeklyMenu) {
+    async addNewShare(shareableMenu) {
         let key = Buffer.from(randomBytes(6)).toString('base64');
-        await this.collection.insertOne({ _id: key, shareableWeeklyMenu });
+        await this.collection.insertOne({ _id: key, shareableMenu });
         return { success: true, key }
     }
 }
