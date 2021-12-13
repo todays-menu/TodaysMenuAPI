@@ -52,7 +52,7 @@ scalar Upload
 input NewDishInput {
     name: String!
     meal: Meal!
-    ingredient: [DishRecipeIngredientINput]!
+    ingredients: [DishRecipeIngredientINput]!
     spicy: Float
     cook_time: Int
     recipe_link: String
@@ -67,7 +67,7 @@ input UpdateDishInput {
     id: ID!
     name: String!
     meal: Meal!
-    ingredient: [DishRecipeIngredientINput]!
+    ingredients: [DishRecipeIngredientINput]!
     spicy: Float
     cook_time: Int
     recipe_link: String
