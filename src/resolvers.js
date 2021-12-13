@@ -17,7 +17,7 @@ export const resolvers = {
             await ds.addNewIngredients(ingredients),
     },
     RecipeIngredient: {
-        ingredient: async (parent, _, { dataSources: { ingredients } }) =>
-            await ingredients.findOneByName(parent.description),
+        ingredient: async (recipeIngredient, _, { dataSources: { ingredients } }) =>
+            await ingredients.findOneByName(recipeIngredient.name),
     }
 };

@@ -49,10 +49,10 @@ type ShareableMenu {
 
 scalar Upload
 
-input NewDishInput {
+input DishInput {
     name: String!
-    meal: Meal!
-    ingredients: [DishRecipeIngredientINput]!
+    meal: Meal
+    ingredients: [RecipeIngredientInput]
     spicy: Float
     cook_time: Int
     recipe_link: String
@@ -63,33 +63,12 @@ input NewDishInput {
     photo: Upload
 }
 
-input UpdateDishInput {
-    id: ID!
-    name: String!
-    meal: Meal!
-    ingredients: [DishRecipeIngredientINput]!
-    spicy: Float
-    cook_time: Int
-    recipe_link: String
-    amount: Int
-    one_dish: Boolean
-    soup: Boolean
-    style: String
-    photo: Upload
-}
-
-input DishRecipeIngredientINput {
+input RecipeIngredientInput {
     name: String!
     quantity: String!
 }
 
-input NewIngredientInput {
-    name: String!
-    category: String!
-}
-
-input UpdateIngredientInput {
-    id: ID!
+input IngredientInput {
     name: String!
     category: String!
 }
@@ -106,7 +85,7 @@ type Query {
 
 type Mutation {
     shareMenu(menu: ShareableMenuInput): ShareableMenu
-    addNewDishes(dishes: [NewDishInput]): MutationResult
-    updateDishes(dishes: [UpdateDishInput]): MutationResult
-    addNewIngredients(ingredients: [NewIngredientInput]): MutationResult
+    addNewDishes(dishes: [DishInput]): MutationResult
+    updateDishes(dishes: [DishInput]): MutationResult
+    addNewIngredients(ingredients: [IngredientInput]): MutationResult
 }
