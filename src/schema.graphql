@@ -10,6 +10,13 @@ type Dish {
     one_dish: Boolean
     soup: Boolean
     style: String
+    photo: Photo
+}
+
+type Photo {
+    filename: String
+    mimetype: String
+    encoding: String
 }
 
 enum Meal {
@@ -39,6 +46,8 @@ type ShareableMenu {
     "Short shareable key"
     key: String
 }
+
+scalar Upload
 
 input NewDishInput {
     name: String!
@@ -89,15 +98,6 @@ input UpdateIngredientInput {
 type MutationResult {
     success: Boolean!
     message: String
-}
-
-scalar Upload
-type File {
-    success: Boolean!
-    message: String
-    filename: String
-    mimetype: String
-    encoding: String
 }
 
 type Query {
