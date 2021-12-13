@@ -14,6 +14,10 @@ export default class Ingredients extends DataSource {
             .map(doc => Object.assign({ id: doc._id }, doc));
     }
 
+    async findOneByName(name) {
+        return await this.collection.findOne({ name: { $eq: name } });
+    }
+
     async addNewIngredients(ingredients) {
         let names = ingredients.map(d => d.name);
         let duplicates = await this.collection.countDocuments({ name: { $in: names } });

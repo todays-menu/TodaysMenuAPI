@@ -26,6 +26,10 @@ const resolvers = {
         addNewIngredients: async (_, { ingredients }, { dataSources: { ingredients: ds } }) =>
             await ds.addNewIngredients(ingredients),
     },
+    RecipeIngredient: {
+        ingredient: async (parent, _, { dataSources: { ingredients } }) =>
+            await ingredients.findOneByName(parent.description),
+    }
 };
 
 async function startApolloServer(typeDefs, resolvers) {

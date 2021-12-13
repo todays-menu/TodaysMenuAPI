@@ -2,7 +2,7 @@ type Dish {
     id: ID!
     name: String!
     meal: Meal!
-    ingredient: [RecipeIngredient]!
+    ingredients: [RecipeIngredient]!
     spicy: Float
     cook_time: Int
     recipe_link: String
@@ -79,8 +79,7 @@ input UpdateDishInput {
 }
 
 input DishRecipeIngredientINput {
-    "Name of the ingredient"
-    ingredient: String!
+    name: String!
     quantity: String!
 }
 
