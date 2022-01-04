@@ -1,8 +1,8 @@
 type Dish {
     id: ID!
     name: String!
-    meal: Meal!
-    ingredients: [RecipeIngredient]!
+    meal: Meal
+    ingredients: [RecipeIngredient!]!
     spicy: Float
     cook_time: Int
     recipe_link: String
@@ -53,7 +53,7 @@ scalar Upload
 input DishInput {
     name: String!
     meal: Meal
-    ingredients: [RecipeIngredientInput]
+    ingredients: [RecipeIngredientInput!]!
     spicy: Float
     cook_time: Int
     recipe_link: String
@@ -81,8 +81,8 @@ type MutationResult {
 }
 
 type Query {
-    dishes: [Dish]
-    ingredients: [Ingredient]
+    dishes: [Dish!]!
+    ingredients: [Ingredient!]!
 }
 
 type Mutation {
