@@ -5,10 +5,11 @@ export const resolvers = {
     Query: {
         dishes: async (_, __, { dataSources: { dishes } }) => await dishes.getDishes(),
         ingredients: async (_, __, { dataSources: { ingredients } }) => await ingredients.getIngredients(),
+        shareableMenu: async (_, { key }, { dataSources: { shares } }) => await shares.findOneByKey(key),
     },
     Mutation: {
-        shareMenu: async (_, { menu }, { dataSources: { share: ds } }) =>
-            await ds.addNewShare(menu),
+        shareMenu: async (_, { menu }, { dataSources: { shares: ds } }) =>
+            await ds.addNewShareableMenu(menu),
         addNewDishes: async (_, { dishes }, { dataSources: { dishes: ds } }) =>
             await ds.addNewDishes(dishes),
         updateDishes: async (_, { dishes }, { dataSources: { dishes: ds } }) =>

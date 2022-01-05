@@ -24,7 +24,7 @@ async function startApolloServer(typeDefs, resolvers) {
         resolvers,
         plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
         dataSources: () => ({
-            share: new Shares(db.collection('shares')),
+            shares: new Shares(db.collection('shares')),
             dishes: new Dishes(db.collection('dishes'), process.env.PHOTOS_PATH),
             ingredients: new Ingredients(db.collection('ingredients')),
         })

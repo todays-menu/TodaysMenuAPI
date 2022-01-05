@@ -10,9 +10,17 @@ export default class Shares extends DataSource {
         this.collection = collection;
     }
 
-    async addNewShare(shareableMenu) {
-        let key = Buffer.from(randomBytes(6)).toString('base64');
-        await this.collection.insertOne({ _id: key, shareableMenu });
+    async addNewShareableMenu(shareableMenu) {
+        let key = Buffer.from(randomBytes(6)).toString('base64url');
+        await this.collection.insertOne({ _id: key, payload: shareableMenu.payload });
         return { success: true, key }
+    }
+
+    async findOneByKey(key) {
+        let item = await this.collection.findOne({ _id: { $eq: key } });
+        if (item == null) {
+            return null;
+        }
+        return { key, payload: item.payload };
     }
 }
