@@ -40,9 +40,16 @@ export default class Dishes extends DataSource {
 
     async updateDishes(dishes) {
         let bulkOp = this.collection.initializeUnorderedBulkOp();
-        dishes.forEach(dish => {
+        await Promise.all(dishes.map(async (dish) => {
+            if (dish.photo) {
+                dish.photo = await this.uploadDishPhoto(dish.name, dish.photo);
+                if (!dish.photo.success) {
+                    return { success: false, message: `photo upload failed. ${dish.photo.message}` };
+                }
+                delete dish.photo.success;
+            }
             bulkOp.find({ name: { $eq: dish.name } }).updateOne({ $set: dish });
-        });
+        }));
         let result = await bulkOp.execute();
         return { success: true, message: `modified ${result.nModified} dishes` };
     }
@@ -64,7 +71,6 @@ export default class Dishes extends DataSource {
             return { success: false };
         })
         await new Promise(resolve => out.on('finish', resolve));
-        await this.collection.insertOne({ key, name, filename, mimetype, encoding });
         return { success: true, filename, mimetype, encoding };
     }
 
