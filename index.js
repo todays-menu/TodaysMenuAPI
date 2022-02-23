@@ -9,12 +9,15 @@ import Ingredients from './src/data-sources/ingredients.js';
 import Shares from './src/data-sources/shares.js';
 import typeDefs from './src/schema.graphql';
 import { resolvers } from './src/resolvers.js';
+import biscuit from '@kanru/biscuit-wasm';
+import Authenticator from './src/data-sources/authenticator.js';
 
 async function startApolloServer(typeDefs, resolvers) {
     const app = express();
     const httpServer = http.createServer(app);
     const dbusername = encodeURIComponent(process.env.DB_USERNAME);
     const dbpassword = encodeURIComponent(process.env.DB_PASSWORD);
+    const rootKey = biscuit.KeyPair.from(biscuit.PrivateKey.from_hex(process.env.ROOT_KEY));
     const clusterUrl = process.env.DB_URL;
     const client = new MongoClient(`mongodb://${dbusername}:${dbpassword}@${clusterUrl}/`);
     await client.connect();
@@ -27,6 +30,7 @@ async function startApolloServer(typeDefs, resolvers) {
             shares: new Shares(db.collection('shares')),
             dishes: new Dishes(db.collection('dishes'), process.env.PHOTOS_PATH),
             ingredients: new Ingredients(db.collection('ingredients')),
+            authenticator: new Authenticator(rootKey, db.collection('users')),
         })
     });
     await server.start();

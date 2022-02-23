@@ -68,6 +68,12 @@ type MutationResult {
     message: String
 }
 
+type LoginResult {
+    success: Boolean!
+    message: String
+    token: String
+}
+
 input ShareableMenuInput {
     "Opaque base64 encoded payload"
     payload: String!
@@ -96,4 +102,5 @@ type Mutation {
     addNewDishes(dishes: [DishInput]): MutationResult
     updateDishes(dishes: [DishInput]): MutationResult
     addNewIngredients(ingredients: [IngredientInput]): MutationResult
+    loginUser(userId: String, password: String): LoginResult
 }

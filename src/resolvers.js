@@ -16,6 +16,8 @@ export const resolvers = {
             await ds.updateDishes(dishes),
         addNewIngredients: async (_, { ingredients }, { dataSources: { ingredients: ds } }) =>
             await ds.addNewIngredients(ingredients),
+        loginUser: async (_, { userId, password }, { dataSources: { authenticator: auth } }) =>
+            await auth.authenticate(userId, password),
     },
     RecipeIngredient: {
         ingredient: async (recipeIngredient, _, { dataSources: { ingredients } }) =>

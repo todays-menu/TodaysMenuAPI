@@ -9,6 +9,7 @@ services:
       DB_PASSWORD: example
       DB_NAME: test
       DB_URL: mongo:27017
+      ROOT_KEY: 9d9d24fb1112e30410becf45bf72318d8c64079229c223c14018d572fe904a5a
       PHOTOS_PATH: '/var/lib/photos'
     volumes:
       - 'photos:/var/lib/photos'
