@@ -11,6 +11,7 @@ import typeDefs from './src/schema.graphql';
 import { resolvers } from './src/resolvers.js';
 import biscuit from '@kanru/biscuit-wasm';
 import Authenticator from './src/data-sources/authenticator.js';
+import Authorizer from './src/authorizer.js';
 
 async function startApolloServer(typeDefs, resolvers) {
     const app = express();
@@ -18,6 +19,7 @@ async function startApolloServer(typeDefs, resolvers) {
     const dbusername = encodeURIComponent(process.env.DB_USERNAME);
     const dbpassword = encodeURIComponent(process.env.DB_PASSWORD);
     const rootKey = biscuit.KeyPair.from(biscuit.PrivateKey.from_hex(process.env.ROOT_KEY));
+    const authorizer = new Authorizer(rootKey.public());
     const clusterUrl = process.env.DB_URL;
     const client = new MongoClient(`mongodb://${dbusername}:${dbpassword}@${clusterUrl}/`);
     await client.connect();
@@ -31,7 +33,14 @@ async function startApolloServer(typeDefs, resolvers) {
             dishes: new Dishes(db.collection('dishes'), process.env.PHOTOS_PATH),
             ingredients: new Ingredients(db.collection('ingredients')),
             authenticator: new Authenticator(rootKey, db.collection('users')),
-        })
+        }),
+        context: ({ req }) => {
+            const authHeader = req.headers.authorization || "";
+            if (authHeader.startsWith('Bearer ')) {
+                return { authorizer, token: authHeader.substring(7, authHeader.length) };
+            }
+            return { authorizer, token: "" };
+        }
     });
     await server.start();
     app.use(graphqlUploadExpress());

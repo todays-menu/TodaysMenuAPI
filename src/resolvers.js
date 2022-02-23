@@ -10,12 +10,30 @@ export const resolvers = {
     Mutation: {
         shareMenu: async (_, { menu }, { dataSources: { shares: ds } }) =>
             await ds.addNewShareableMenu(menu),
-        addNewDishes: async (_, { dishes }, { dataSources: { dishes: ds } }) =>
-            await ds.addNewDishes(dishes),
-        updateDishes: async (_, { dishes }, { dataSources: { dishes: ds } }) =>
-            await ds.updateDishes(dishes),
-        addNewIngredients: async (_, { ingredients }, { dataSources: { ingredients: ds } }) =>
-            await ds.addNewIngredients(ingredients),
+        addNewDishes: async (_, { dishes }, {  authorizer, token, dataSources: { dishes: ds } }) => {
+            try {
+                authorizer.authorize(token);
+            } catch {
+                return { success: false, message: 'permission denied' };
+            }
+            return await ds.addNewDishes(dishes);
+        },
+        updateDishes: async (_, { dishes }, {  authorizer, token, dataSources: { dishes: ds } }) => {
+            try {
+                authorizer.authorize(token);
+            } catch {
+                return { success: false, message: 'permission denied' };
+            }
+            return await ds.updateDishes(dishes);
+        },
+        addNewIngredients: async (_, { ingredients }, { authorizer, token, dataSources: { ingredients: ds } }) => {
+            try {
+                authorizer.authorize(token);
+            } catch {
+                return { success: false, message: 'permission denied' };
+            }
+            return await ds.addNewIngredients(ingredients);
+        },
         loginUser: async (_, { userId, password }, { dataSources: { authenticator: auth } }) =>
             await auth.authenticate(userId, password),
     },
