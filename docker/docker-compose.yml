@@ -1,0 +1,34 @@
+version: "3.9"
+services:
+  dynamodb:
+    image: amazon/dynamodb-local
+    restart: always
+    volumes:
+      - "dynamodb_data:/var/tmp"
+    command: "-jar DynamoDBLocal.jar -sharedDb -dbPath /var/tmp"
+  dynamodb-admin:
+    image: aaronshaf/dynamodb-admin
+    restart: always
+    ports:
+      - 8001:8001
+    environment:
+      DYNAMO_ENDPOINT: http://dynamodb:8000
+  s3:
+    image: minio/minio
+    command: server /data --console-address ":9001"
+    restart: always
+    ports:
+      - 9001:9001
+    volumes:
+      - "photos:/data"
+  cloudfront:
+    image: nginx
+    restart: always
+    ports:
+      - 8000:80
+    volumes:
+      - "photos:/usr/share/nginx/html"
+
+volumes:
+  photos: null
+  dynamodb_data: null
