@@ -26,7 +26,7 @@ use poem_lambda::Error;
 const DASH_BOARD_URL: &str =
     "https://studio.apollographql.com/sandbox/explorer?endpoint=http://localhost:3000/graphql";
 
-#[derive(Clone)]
+#[derive(Clone, PartialEq)]
 enum Profile {
     Prod,
     Local,
@@ -77,13 +77,16 @@ async fn main() -> Result<(), Error> {
     let authenticator = Authenticator::new(dynamodb.clone(), &root_key_hex);
     let authorizer = Authorizer::new(&root_key_hex);
     let share_loader = ShareLoader::new(dynamodb);
-    let schema = Schema::build(Query, Mutation, EmptySubscription)
+    let mut schema_builder = Schema::build(Query, Mutation, EmptySubscription)
         .data(DataLoader::new(dish_loader, tokio::spawn))
         .data(DataLoader::new(ingredient_loader, tokio::spawn))
         .data(DataLoader::new(share_loader, tokio::spawn))
         .data(authenticator)
-        .data(authorizer)
-        .finish();
+        .data(authorizer);
+    if profile == Profile::Prod {
+        schema_builder = schema_builder.disable_introspection();
+    }
+    let schema = schema_builder.finish();
     let cors = Cors::new().allow_origin(env::var("CORS_ORIGIN")?);
     let app = Route::new()
         .at("/", get(dashboard.data(profile)))

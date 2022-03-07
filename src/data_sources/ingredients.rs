@@ -3,10 +3,10 @@ use std::{collections::HashMap, sync::Arc};
 use anyhow::Error;
 use async_graphql::dataloader::Loader;
 use aws_sdk_dynamodb::{
-    model::{AttributeValue, KeysAndAttributes, PutRequest, WriteRequest},
+    model::{AttributeValue, KeysAndAttributes},
     Client,
 };
-use serde_dynamo::{from_items, to_item};
+use serde_dynamo::from_items;
 
 use crate::graphql::{Ingredient, IngredientInput};
 
@@ -46,12 +46,9 @@ impl Loader<String> for IngredientLoader {
                 .send()
                 .await
                 .map_err(|e| Arc::new(e.into()))?;
-            match output.responses {
-                Some(mut items) => {
-                    let items = items.remove(TABLE_NAME).expect("responses");
-                    ingredients.append(&mut from_items(items).map_err(|e| Arc::new(e.into()))?);
-                }
-                None => (),
+            if let Some(mut items) = output.responses {
+                let items = items.remove(TABLE_NAME).expect("responses");
+                ingredients.append(&mut from_items(items).map_err(|e| Arc::new(e.into()))?);
             }
         }
         Ok(ingredients
@@ -87,23 +84,6 @@ impl IngredientLoader {
                 .send()
                 .await?;
         }
-        // let requests = items
-        //     .iter()
-        //     .map(|item| {
-        //         WriteRequest::builder()
-        //             .put_request(
-        //                 PutRequest::builder()
-        //                     .set_item(Some(to_item(item).expect("serialize ingredient")))
-        //                     .build(),
-        //             )
-        //             .build()
-        //     })
-        //     .collect();
-        // self.db_client
-        //     .batch_write_item()
-        //     .request_items(TABLE_NAME, requests)
-        //     .send()
-        //     .await?;
 
         // TODO handle error
         Ok(())
