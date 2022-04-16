@@ -1,7 +1,8 @@
+MODE ?= debug
+
 all:
 	sam build -u -bi build-rust-provided.al2
 
-MODE ?= debug
 build-TodaysMenuApiFunction: build-TodaysMenuApiFunction-$(MODE)
 
 build-TodaysMenuApiFunction-release:

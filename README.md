@@ -13,7 +13,6 @@ Prepare docker image
 ```sh
 cd docker
 docker build -t build-rust-provided.al2 .
-docker-compose up --build -d
 ```
 
 Build (in project work dir)
@@ -25,6 +24,7 @@ make
 Run local api gateway
 
 ```sh
+make localstack
 make apigw
 ```
 
